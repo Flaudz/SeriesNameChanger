@@ -1,0 +1,14 @@
+﻿<Window x:Class="MovieNameChanger.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MovieNameChanger"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="1080" Width="1920">
+    <Canvas x:Name="MotherCanvas" Background="Gray">
+        <Button x:Name="ChooseFilesBtn" Content="Choose Files" FontSize="30" Width="250" Canvas.Left="835" Canvas.Top="100" Click="ChooseFilesBtn_Click"/>
+        <TextBox x:Name="SeriesSearchInput" Text="Search for a series to change name on" FontSize="30" Width="600" TextAlignment="Center" Canvas.Left="660" Canvas.Top="300" />
+        <TextBox x:Name="SeriesSeasonInput" Text="Season of that seires" FontSize="30" Width="600" TextAlignment="Center" Canvas.Left="660" Canvas.Top="400" />
+    </Canvas>
+</Window>
