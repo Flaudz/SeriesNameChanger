@@ -24,10 +24,13 @@ namespace MovieNameChanger
     public partial class MainWindow : Window
     {
         Classes.MiddleClass middleClass = new Classes.MiddleClass();
+        List<string> listOfSeries = new List<string>();
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        public List<string> ListOfSeries { get => listOfSeries; set => listOfSeries = value; }
 
         private void ChooseFilesBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -41,5 +44,25 @@ namespace MovieNameChanger
 
             }
         }
+
+        private void SeriesSearchInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                ListOfSeries = middleClass.SeriesPickOptions(SeriesSeasonInput.Text);
+
+            }
+            catch(Exception err)
+            {
+                Console.WriteLine(err);
+            }
+            foreach (string series in ListOfSeries)
+            {
+                ComboBoxItem comboBoxItem = new ComboBoxItem();
+                comboBoxItem.Content = series;
+                seriesSelector.Items.Add(comboBoxItem);
+            }
+        }
     }
 }
+

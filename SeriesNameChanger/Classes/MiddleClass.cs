@@ -34,6 +34,17 @@ namespace MovieNameChanger.Classes
             }
         }
 
+        public List<string> SeriesPickOptions(string seriesName)
+        {
+            List<string> list = new List<string>();
+            ShowSearchProperties.Root root = ApiCall.GetShowId(seriesName);
+            for (int i = 0; i < 5; i++)
+            {
+                list.Add(root.results[i].name);
+            }
+            return list;
+        }
+
         public void EpisodeInformationMetode(string id, string seriesName, string season, string[] files, string filename)
         {
             Array.Sort(files);

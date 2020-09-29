@@ -5,10 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MovieNameChanger"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1080" Width="1920">
+        Title="MainWindow" Height="720" Width="1280">
     <Canvas x:Name="MotherCanvas" Background="Gray">
         <Button x:Name="ChooseFilesBtn" Content="Choose Files" FontSize="30" Width="250" Canvas.Left="835" Canvas.Top="100" Click="ChooseFilesBtn_Click"/>
-        <TextBox x:Name="SeriesSearchInput" Text="Search for a series to change name on" FontSize="30" Width="600" TextAlignment="Center" Canvas.Left="660" Canvas.Top="300" />
+        <TextBox x:Name="SeriesSearchInput" Text="Search for a series to change name on" FontSize="30" Width="600" TextAlignment="Center" Canvas.Left="660" Canvas.Top="300" TextChanged="SeriesSearchInput_TextChanged" />
         <TextBox x:Name="SeriesSeasonInput" Text="Season of that seires" FontSize="30" Width="600" TextAlignment="Center" Canvas.Left="660" Canvas.Top="400" />
+        <ComboBox x:Name="seriesSelector" Width="300" Canvas.Top="300" FontSize="20" Canvas.Left="10">
+            
+        </ComboBox>
     </Canvas>
 </Window>
