@@ -14,7 +14,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
-using System.Windows.Shapes;
 
 namespace MovieNameChanger
 {
@@ -24,7 +23,8 @@ namespace MovieNameChanger
     public partial class MainWindow : Window
     {
         Classes.MiddleClass middleClass = new Classes.MiddleClass();
-        List<string> listOfSeries = new List<string>();
+        private List<string> listOfSeries = new List<string>();
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -55,12 +55,6 @@ namespace MovieNameChanger
             catch(Exception err)
             {
                 Console.WriteLine(err);
-            }
-            foreach (string series in ListOfSeries)
-            {
-                ComboBoxItem comboBoxItem = new ComboBoxItem();
-                comboBoxItem.Content = series;
-                seriesSelector.Items.Add(comboBoxItem);
             }
         }
     }
