@@ -35,10 +35,41 @@ namespace MovieNameChanger
             if (FBD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string[] files = Directory.GetFiles(FBD.SelectedPath);
-                string[] dirs = Directory.GetDirectories(FBD.SelectedPath);
                 
                 middleClass.SeriesSearch(SeriesSearchInput.Text, SeriesSeasonInput.Text, files, System.IO.Path.GetFileName(files[0]));
 
+            }
+        }
+
+        private void PlaceHolder(object sender, RoutedEventArgs e)
+        {
+            if (SeriesSearchInput.Text == "Search for a series to change name on")
+            {
+                SeriesSearchInput.Text = "";
+            }
+        }
+
+        private void PlaceHolderAdd(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SeriesSearchInput.Text))
+            {
+                SeriesSearchInput.Text = "Search for a series to change name on";
+            }
+        }
+
+        private void SeasonPlaceholder(object sender, RoutedEventArgs e)
+        {
+            if (SeriesSeasonInput.Text == "Season of that seires")
+            {
+                SeriesSeasonInput.Text = "";
+            }
+        }
+
+        private void SeasonPlaceholderAdd(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SeriesSeasonInput.Text))
+            {
+                SeriesSeasonInput.Text = "Season of that series";
             }
         }
     }

@@ -7,11 +7,13 @@ using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Windows.Documents;
+using SeriesNameChanger;
 
 namespace MovieNameChanger.Classes
 {
     public class MiddleClass
     {
+        
         Api.ShowSearchCall apiCall = new Api.ShowSearchCall();
         private int count;
         private List list = new List();
@@ -36,20 +38,21 @@ namespace MovieNameChanger.Classes
 
         public void EpisodeInformationMetode(string id, string seriesName, string season, string[] files, string filename)
         {
-            Array.Sort(files);
+            Array.Sort(files, new AlphaNumericComparer());
             EpisodeInformationProperties.Root EpisodeInformation = ApiCall.GetEpisodeInformation(season, id);
             int i = 0;
+            
             foreach (string file in files)
-            {   
+            {
                 string asd = Path.GetFileName(files[i]);
                 string filetype = file.Split('.').Last();
                 string fullLocation = file.Replace(@"\", "/");
-                string location = $@"{fullLocation.Replace(asd, "")}{i+1}.{filetype}";
+                Console.WriteLine($"File: {file}");
                 string location2 = $@"{fullLocation}{seriesName}.S{season}.EP{EpisodeInformation.episodes[i].episode_number}.{EpisodeInformation.episodes[i].name}.{filetype}";
                 string idontknow = location2.Replace(asd, "");
                 string finallocation = idontknow.Replace("\"", "");
                 i++;
-                File.Move(location, finallocation);
+                File.Move(file, finallocation);
             }
 
             foreach (string file in files)
