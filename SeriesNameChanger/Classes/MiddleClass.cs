@@ -13,7 +13,7 @@ namespace MovieNameChanger.Classes
 {
     public class MiddleClass
     {
-        
+
         Api.ShowSearchCall apiCall = new Api.ShowSearchCall();
         private int count;
         private List list = new List();
@@ -23,7 +23,6 @@ namespace MovieNameChanger.Classes
 
         public void SeriesSearch(string seriesName, string season, string[] files, string filename)
         {
-            Array.Sort(files);
             count = 0;
             ShowSearchProperties.Root Series = ApiCall.GetShowId(seriesName);
             for (int i = 0; count < 1; i++)
@@ -41,7 +40,7 @@ namespace MovieNameChanger.Classes
             Array.Sort(files, new AlphaNumericComparer());
             EpisodeInformationProperties.Root EpisodeInformation = ApiCall.GetEpisodeInformation(season, id);
             int i = 0;
-            
+
             foreach (string file in files)
             {
                 string asd = Path.GetFileName(files[i]);
