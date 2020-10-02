@@ -5,10 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MovieNameChanger"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1080" Width="1920">
-    <Canvas x:Name="MotherCanvas" Background="Gray">
-        <Button x:Name="ChooseFilesBtn" Content="Choose Files" FontSize="30" Width="250" Canvas.Left="835" Canvas.Top="100" Click="ChooseFilesBtn_Click"/>
-        <TextBox x:Name="SeriesSearchInput" Text="Search for a series to change name on" FontSize="30" Width="600" TextAlignment="Center" Canvas.Left="660" Canvas.Top="300" GotFocus="PlaceHolder" LostFocus="PlaceHolderAdd" />
-        <TextBox x:Name="SeriesSeasonInput" Text="Season of that seires" FontSize="30" Width="600" TextAlignment="Center" Canvas.Left="660" Canvas.Top="400" GotFocus="SeasonPlaceholder" LostFocus="SeasonPlaceholderAdd" />
-    </Canvas>
+        Title="Series Renamer" Height="720" Width="1080">
+    <Grid x:Name="MotherCanvas" Background="Gray">
+        <TextBlock TextWrapping="Wrap" Text="Rename" FontSize="30" TextAlignment="Center" FontFamily="Candara" FontWeight="Bold" Margin="0,0,436,626" Height="38" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="200"/>
+        <StackPanel x:Name="dropStackPanel" AllowDrop="True" HorizontalAlignment="Left" Height="536" Margin="10,90,0,0" VerticalAlignment="Top" Width="464" Background="white" Drop="dropStackPanel_Drop">
+            <TextBlock x:Name="dropedFilesTextBlock" TextWrapping="Wrap" Height="536"/>
+        </StackPanel>
+        <StackPanel x:Name="notDropStackPanel" AllowDrop="False" HorizontalAlignment="Left" Height="536" Margin="598,90,0,0" VerticalAlignment="Top" Width="464" Background="white">
+            <TextBlock x:Name="finalLocationText" Height="536" TextWrapping="Wrap" Text=""/>
+        </StackPanel>
+        <Button x:Name="renameFinalBtn" Content="Rename" FontSize="20" HorizontalAlignment="Left" Margin="486,287,0,0" VerticalAlignment="Top" Width="100" Click="renameFinalBtn_Click"/>
+        <ComboBox x:Name="combBoxApi" HorizontalAlignment="Left" Margin="486,323,0,0" VerticalAlignment="Top" Width="100" FontSize="10" >
+            <ComboBoxItem>Tmdb</ComboBoxItem>
+        </ComboBox>
+        <TextBox x:Name="seriesNameInput" HorizontalAlignment="Left" Height="23" Margin="10,648,0,0" TextWrapping="Wrap" Text="Series" VerticalAlignment="Top" Width="200" FontSize="15"/>
+        <ComboBox x:Name="seriesChoice" HorizontalAlignment="Left" Margin="138,31,0,0" VerticalAlignment="Top" Width="200" FontSize="15" MouseEnter="addComboItems"/>
+        <ComboBox x:Name="seriesSeasonPick" HorizontalAlignment="Left" Margin="744,31,0,0" VerticalAlignment="Top" Width="200" FontSize="15" MouseEnter="pickNowSeason"/>
+
+    </Grid>
 </Window>

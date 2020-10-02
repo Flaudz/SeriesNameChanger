@@ -14,7 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
-using System.Windows.Shapes;
+using DataFormats = System.Windows.Forms.DataFormats;
+using SeriesNameChanger;
 
 namespace MovieNameChanger
 {
@@ -29,47 +30,109 @@ namespace MovieNameChanger
             InitializeComponent();
         }
 
-        private void ChooseFilesBtn_Click(object sender, RoutedEventArgs e)
+        private void dropStackPanel_Drop(object sender, System.Windows.DragEventArgs e)
         {
-            FolderBrowserDialog FBD = new FolderBrowserDialog();
-            if (FBD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if(dropedFilesTextBlock.Text != "")
             {
-                string[] files = Directory.GetFiles(FBD.SelectedPath);
-                
-                middleClass.SeriesSearch(SeriesSearchInput.Text, SeriesSeasonInput.Text, files, System.IO.Path.GetFileName(files[0]));
-
+                dropedFilesTextBlock.Text = "";
+            }
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                foreach (string file in files)
+                {
+                    string renamedfile = file.Replace(@"\", "/");
+                    dropedFilesTextBlock.Text += $"{renamedfile}\n";
+                }
+                if(seriesChoice.Text != "" && seriesSeasonPick.Text != "")
+                {
+                    int index = GetNumberOfFiles();
+                    for (int i = 0; i < index; i++)
+                    {
+                        finalLocationText.Text += $"{asd(i)}\n";
+                    }
+                }
             }
         }
 
-        private void PlaceHolder(object sender, RoutedEventArgs e)
+        private string asd(int i)
         {
-            if (SeriesSearchInput.Text == "Search for a series to change name on")
+            string[] files = dropedFilesTextBlock.Text.Split('\n');
+            Array.Sort(files, new AlphaNumericComparer());
+            if (files[0] == "")
             {
-                SeriesSearchInput.Text = "";
+                files = files.Where(w => w != files[0]).ToArray();
+            }
+            string filename = files[i].Split('/').Last();
+            string fileLocation = files[i].Replace(filename, "");
+            string fileType = files[i].Split('.').Last();
+            string finalLocation = middleClass.getId(seriesChoice.Text, seriesSeasonPick.Text, i, fileLocation, fileType);
+            return finalLocation;
+        }
+
+        private int GetNumberOfFiles()
+        {
+            string[] files = dropedFilesTextBlock.Text.Split('\n');
+            return files.Length-1;
+        }
+
+        private void renameFinalBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            int index = GetNumberOfFiles();
+            Console.WriteLine(index);
+            for (int i = 0; i < index; i++)
+            {
+                renameFile(i);
             }
         }
 
-        private void PlaceHolderAdd(object sender, RoutedEventArgs e)
+        private void renameFile(int i)
         {
-            if (string.IsNullOrWhiteSpace(SeriesSearchInput.Text))
+            string[] files = dropedFilesTextBlock.Text.Split('\n');
+            Array.Sort(files, new AlphaNumericComparer());
+            if(files[0] == "")
             {
-                SeriesSearchInput.Text = "Search for a series to change name on";
+                files = files.Where(w => w != files[0]).ToArray();
             }
+            string filename = files[i].Split('/').Last();
+            string fileLocation = files[i].Replace(filename, "");
+            string fileType = files[i].Split('.').Last();
+            string oldFileLocation = files[i];
+            middleClass.SeriesSearch(seriesChoice.Text, seriesSeasonPick.Text, files, fileLocation, fileType, oldFileLocation, i);
+        }
+        private void addComboItems(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            List<string> stringOfSeriesNames = middleClass.GetSeriesNames(seriesNameInput.Text);
+            foreach (string name in stringOfSeriesNames)
+            {
+                if(seriesChoice.Items.Count > 4)
+                {
+                    seriesChoice.Items.Clear();
+                    seriesChoice.Items.Add(name);
+                }
+                else
+                {
+                    seriesChoice.Items.Add(name);
+                }
+            }
+            
         }
 
-        private void SeasonPlaceholder(object sender, RoutedEventArgs e)
+        private void pickNowSeason(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (SeriesSeasonInput.Text == "Season of that seires")
+            if(seriesChoice.Text != "")
             {
-                SeriesSeasonInput.Text = "";
-            }
-        }
-
-        private void SeasonPlaceholderAdd(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(SeriesSeasonInput.Text))
-            {
-                SeriesSeasonInput.Text = "Season of that series";
+                List<string> stringName = middleClass.GetSeriesNames(seriesChoice.Text);
+            
+                List<string> seasonCount = middleClass.GetSeason(stringName[0]);
+                foreach (string seasonNumber in seasonCount)
+                {
+                    if(seasonNumber != "0")
+                    {
+                        seriesSeasonPick.Items.Add(seasonNumber);
+                    }
+                }
             }
         }
     }

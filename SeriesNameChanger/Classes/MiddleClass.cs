@@ -21,45 +21,116 @@ namespace MovieNameChanger.Classes
         public int Count { get => count; set => count = value; }
         public List List { get => list; set => list = value; }
 
-        public void SeriesSearch(string seriesName, string season, string[] files, string filename)
+        public void SeriesSearch(string seriesName, string season, string[] files, string fileLocation, string fileType, string oldFileLocation, int j)
         {
-            Array.Sort(files);
             count = 0;
             ShowSearchProperties.Root Series = ApiCall.GetShowId(seriesName);
-            for (int i = 0; count < 1; i++)
+            for (int i = 0; i < 1; i++)
             {
                 if (Series.results[i].name == seriesName)
                 {
-                    EpisodeInformationMetode(Series.results[i].id.ToString(), seriesName, season, files, filename);
-                    count++;
+                    try
+                    {
+                        EpisodeInformationMetode(Series.results[i].id.ToString(), seriesName, season, files, fileLocation, fileType, oldFileLocation, j);
+                        
+                        count++;
+                    }
+                    catch(Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
                 }
             }
         }
 
-        public void EpisodeInformationMetode(string id, string seriesName, string season, string[] files, string filename)
+        public List<string> GetSeriesNames(string seriesname)
         {
-            Array.Sort(files, new AlphaNumericComparer());
-            EpisodeInformationProperties.Root EpisodeInformation = ApiCall.GetEpisodeInformation(season, id);
-            int i = 0;
-            
-            foreach (string file in files)
+            List<string> names = new List<string>();
+            try
             {
-                string asd = Path.GetFileName(files[i]);
-                string filetype = file.Split('.').Last();
-                string fullLocation = file.Replace(@"\", "/");
-                Console.WriteLine($"File: {file}");
-                string location2 = $@"{fullLocation}{seriesName}.S{season}.EP{EpisodeInformation.episodes[i].episode_number}.{EpisodeInformation.episodes[i].name}.{filetype}";
-                string idontknow = location2.Replace(asd, "");
-                string finallocation = idontknow.Replace("\"", "");
-                i++;
-                File.Move(file, finallocation);
+                ShowSearchProperties.Root series = ApiCall.GetShowId(seriesname);
+                if(series.results.Count != 0)
+                {
+                    if(series.results.Count < 6)
+                    {
+                        foreach (var name in series.results)
+                        {
+                            if (!names.Contains(name.name))
+                            {
+                                names.Add($"{name.name}");
+                            }
+                        }
+                    }
+                    for (int i = 0; i < 5; i++)
+                    {
+                        if (!names.Contains(series.results[i].name))
+                        {
+                            names.Add($"{series.results[i].name}");
+                        }
+                        
+                    }
+                }
             }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return names;
+        }
 
-            foreach (string file in files)
+        public List<string> GetSeason(string name)
+        {
+            List<string> SeasonCount = new List<string>();
+            ShowSearchProperties.Root series = ApiCall.GetShowId(name);
+            SeasonCountProperties.Root seasonCounter = ApiCall.GetShowSeasonCount(series.results[0].id.ToString());
+            int seasonCount = seasonCounter.seasons.Count - 1;
+            for (int i = 0; i <= seasonCount; i++)
             {
-                string fullLocation = file.Replace(@"\", "/");
-                File.Delete($"{fullLocation}");
+                SeasonCount.Add(i.ToString());
             }
+            return SeasonCount;
+        }
+
+        public void EpisodeInformationMetode(string id, string seriesName, string season, string[] files, string fileLocation, string fileType, string oldFileLocation, int i)
+        {
+            EpisodeInformationProperties.Root EpisodeInformation = ApiCall.GetEpisodeInformation(season, id);
+            
+            string secondFinalLocation = $@"{fileLocation}{seriesName}.S{season}.Ep{EpisodeInformation.episodes[i].episode_number}.{EpisodeInformation.episodes[i].name}.{fileType}";
+            string finalLocation = secondFinalLocation.Replace("/", @"\");
+            
+            Console.WriteLine(finalLocation);
+            File.Move(oldFileLocation, finalLocation);
+            File.Delete($"{oldFileLocation}");
+        }
+
+        public string getId(string name, string season, int i, string fileLocation, string fileType)
+        {
+            ShowSearchProperties.Root Series = ApiCall.GetShowId(name);
+            string finalLocation = GetFinalNames(Series.results[0].id.ToString(), name, season, fileLocation, fileType, i);
+            return finalLocation;
+        }
+
+        public string GetFinalNames(string id, string seriesName, string season, string fileLocation, string fileType, int i)
+        {
+            EpisodeInformationProperties.Root EpisodeInformation = ApiCall.GetEpisodeInformation(season, id);
+
+            string secondFinalLocation = $@"{fileLocation}{seriesName}.S{season}.Ep{EpisodeInformation.episodes[i].episode_number}.{EpisodeInformation.episodes[i].name}.{fileType}";
+            string finalLocation = secondFinalLocation.Replace("/", @"\");
+
+            return finalLocation;
+        }
+
+        public int GetSeriesId(string seriesName, string season)
+        {
+            ShowSearchProperties.Root Series = ApiCall.GetShowId(seriesName);
+            int i = NumberOfEpisodes(Series.results[0].id.ToString(), season);
+            return i;
+        }
+
+        public int NumberOfEpisodes(string id, string season)
+        {
+            EpisodeInformationProperties.Root epInfo = ApiCall.GetEpisodeInformation(season, id);
+            return epInfo.episodes.Count;
         }
     }
 }
