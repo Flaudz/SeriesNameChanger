@@ -3,6 +3,7 @@ using System.Net;
 using static MovieNameChanger.Classes.Api.ShowSearchProperties;
 using static MovieNameChanger.Classes.Api.SeasonCountProperties;
 using static MovieNameChanger.Classes.Api.EpisodeInformationProperties;
+using static MovieNameChanger.Classes.Api.MovieProperties;
 
 namespace MovieNameChanger.Classes.Api
 {
@@ -27,6 +28,14 @@ namespace MovieNameChanger.Classes.Api
         {
             string json = new WebClient().DownloadString($@"https://api.themoviedb.org/3/tv/{id}/season/{season}?api_key=0a34d1c5f077444133ab367be386561a&language=en-US");
             EpisodeInformationProperties.Root myDeserializedClass = JsonConvert.DeserializeObject<EpisodeInformationProperties.Root>(json);
+            return myDeserializedClass;
+        }
+
+        public MovieProperties.Root GetMovieInformation(string movieName)
+        {
+            string movie = movieName.Replace(" ", "%20");
+            string json = new WebClient().DownloadString($@"https://api.themoviedb.org/3/search/movie?api_key=0a34d1c5f077444133ab367be386561a&language=en-US&query={movie}&page=1&include_adult=false");
+            MovieProperties.Root myDeserializedClass = JsonConvert.DeserializeObject<MovieProperties.Root>(json);
             return myDeserializedClass;
         }
     }

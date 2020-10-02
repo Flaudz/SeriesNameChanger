@@ -132,5 +132,31 @@ namespace MovieNameChanger.Classes
             EpisodeInformationProperties.Root epInfo = ApiCall.GetEpisodeInformation(season, id);
             return epInfo.episodes.Count;
         }
+
+        public List<string> PickMovieString(string movieName)
+        {
+            List<string> stringOfMovies = new List<string>();
+            MovieProperties.Root GetMovie = ApiCall.GetMovieInformation(movieName);
+            for (int i = 0; i < 5; i++)
+            {
+                stringOfMovies.Add(GetMovie.results[i].title);
+            }
+            return stringOfMovies;
+
+        }
+
+        public void GetMovieName(string movieName, string file)
+        {
+            MovieProperties.Root GetMovie = ApiCall.GetMovieInformation(movieName);
+            string finalName = $"{GetMovie.results[0].title}({GetMovie.results[0].release_date.Split('-').First()})";
+            file = file.Replace(@"\", "/");
+            string filename = file.Split('/').Last();
+            string fileLocation = file.Replace(filename, "");
+            string fileType = file.Split('.').Last();
+            Console.WriteLine($"FileName: {filename}");
+            Console.WriteLine($"FileLocation: {fileLocation}");
+            File.Move(file, $"{fileLocation}{finalName}.{fileType}");
+            File.Delete(file);
+        }
     }
 }

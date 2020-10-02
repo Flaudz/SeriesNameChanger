@@ -103,6 +103,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\Api\EpisodeInformationProperties.cs" />
+    <Compile Include="Classes\Api\MovieProperties.cs" />
     <Compile Include="Classes\Api\SeasonCountProperties.cs" />
     <Compile Include="Classes\Api\ShowSearchCall.cs" />
     <Compile Include="Classes\Api\ShowSearchProperties.cs" />

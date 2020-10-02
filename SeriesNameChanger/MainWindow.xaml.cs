@@ -28,6 +28,8 @@ namespace MovieNameChanger
         public MainWindow()
         {
             InitializeComponent();
+            combBoxApi.Items.Add("Series");
+            combBoxApi.Items.Add("Movie");
         }
 
         private void dropStackPanel_Drop(object sender, System.Windows.DragEventArgs e)
@@ -38,18 +40,28 @@ namespace MovieNameChanger
             }
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                foreach (string file in files)
+                if(combBoxApi.Text == "Series")
                 {
-                    string renamedfile = file.Replace(@"\", "/");
-                    dropedFilesTextBlock.Text += $"{renamedfile}\n";
-                }
-                if(seriesChoice.Text != "" && seriesSeasonPick.Text != "")
-                {
-                    int index = GetNumberOfFiles();
-                    for (int i = 0; i < index; i++)
+                    string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                    foreach (string file in files)
                     {
-                        finalLocationText.Text += $"{asd(i)}\n";
+                        string renamedfile = file.Replace(@"\", "/");
+                        dropedFilesTextBlock.Text += $"{renamedfile}\n";
+                    }
+                    if (seriesChoice.Text != "" && seriesSeasonPick.Text != "")
+                    {
+                        int index = GetNumberOfFiles();
+                        for (int i = 0; i < index; i++)
+                        {
+                            finalLocationText.Text += $"{asd(i)}\n";
+                        }
+                    }
+                } else if(combBoxApi.Text == "Movie")
+                {
+                    string[] movies = (string[])e.Data.GetData(DataFormats.FileDrop);
+                    foreach (string movie in movies)
+                    {
+                        dropedFilesTextBlock.Text += $"{movie}\n";
                     }
                 }
             }
@@ -78,12 +90,18 @@ namespace MovieNameChanger
 
         private void renameFinalBtn_Click(object sender, RoutedEventArgs e)
         {
-
-            int index = GetNumberOfFiles();
-            Console.WriteLine(index);
-            for (int i = 0; i < index; i++)
+            if (combBoxApi.Text == "Series")
             {
-                renameFile(i);
+                int index = GetNumberOfFiles();
+                Console.WriteLine(index);
+                for (int i = 0; i < index; i++)
+                {
+                    renameFile(i);
+                }
+            }
+            else if(combBoxApi.Text == "Movie")
+            {
+                middleClass.GetMovieName(seriesChoice.Text, dropedFilesTextBlock.Text.Split('\n').First());
             }
         }
 
@@ -101,19 +119,39 @@ namespace MovieNameChanger
             string oldFileLocation = files[i];
             middleClass.SeriesSearch(seriesChoice.Text, seriesSeasonPick.Text, files, fileLocation, fileType, oldFileLocation, i);
         }
+
         private void addComboItems(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            List<string> stringOfSeriesNames = middleClass.GetSeriesNames(seriesNameInput.Text);
-            foreach (string name in stringOfSeriesNames)
+            if(combBoxApi.Text == "Series")
             {
-                if(seriesChoice.Items.Count > 4)
+                List<string> stringOfSeriesNames = middleClass.GetSeriesNames(seriesNameInput.Text);
+                foreach (string name in stringOfSeriesNames)
                 {
-                    seriesChoice.Items.Clear();
-                    seriesChoice.Items.Add(name);
+                    if(seriesChoice.Items.Count > 4)
+                    {
+                        seriesChoice.Items.Clear();
+                        seriesChoice.Items.Add(name);
+                    }
+                    else
+                    {
+                        seriesChoice.Items.Add(name);
+                    }
                 }
-                else
+            }
+            else if(combBoxApi.Text == "Movie")
+            {
+                List<string> listOfMovies = middleClass.PickMovieString(seriesNameInput.Text);
+                foreach (string movieName in listOfMovies)
                 {
-                    seriesChoice.Items.Add(name);
+                    if(seriesChoice.Items.Count > 4)
+                    {
+                        seriesChoice.Items.Clear();
+                        seriesChoice.Items.Add(movieName);
+                    }
+                    else
+                    {
+                        seriesChoice.Items.Add(movieName);
+                    }
                 }
             }
             
@@ -121,19 +159,24 @@ namespace MovieNameChanger
 
         private void pickNowSeason(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if(seriesChoice.Text != "")
+            if(combBoxApi.Text == "Series")
             {
-                List<string> stringName = middleClass.GetSeriesNames(seriesChoice.Text);
-            
-                List<string> seasonCount = middleClass.GetSeason(stringName[0]);
-                foreach (string seasonNumber in seasonCount)
+                if(seriesChoice.Text != "")
                 {
-                    if(seasonNumber != "0")
+                    List<string> stringName = middleClass.GetSeriesNames(seriesChoice.Text);
+            
+                    List<string> seasonCount = middleClass.GetSeason(stringName[0]);
+                    foreach (string seasonNumber in seasonCount)
                     {
-                        seriesSeasonPick.Items.Add(seasonNumber);
+                        if(seasonNumber != "0")
+                        {
+                            seriesSeasonPick.Items.Add(seasonNumber);
+                        }
                     }
                 }
             }
         }
+
+        
     }
 }

@@ -16,9 +16,8 @@
         </StackPanel>
         <Button x:Name="renameFinalBtn" Content="Rename" FontSize="20" HorizontalAlignment="Left" Margin="486,287,0,0" VerticalAlignment="Top" Width="100" Click="renameFinalBtn_Click"/>
         <ComboBox x:Name="combBoxApi" HorizontalAlignment="Left" Margin="486,323,0,0" VerticalAlignment="Top" Width="100" FontSize="10" >
-            <ComboBoxItem>Tmdb</ComboBoxItem>
         </ComboBox>
-        <TextBox x:Name="seriesNameInput" HorizontalAlignment="Left" Height="23" Margin="10,648,0,0" TextWrapping="Wrap" Text="Series" VerticalAlignment="Top" Width="200" FontSize="15"/>
+        <TextBox x:Name="seriesNameInput" HorizontalAlignment="Left" Height="23" Margin="10,648,0,0" TextWrapping="Wrap" Text="Series" VerticalAlignment="Top" Width="200" FontSize="15" />
         <ComboBox x:Name="seriesChoice" HorizontalAlignment="Left" Margin="138,31,0,0" VerticalAlignment="Top" Width="200" FontSize="15" MouseEnter="addComboItems"/>
         <ComboBox x:Name="seriesSeasonPick" HorizontalAlignment="Left" Margin="744,31,0,0" VerticalAlignment="Top" Width="200" FontSize="15" MouseEnter="pickNowSeason"/>
 
