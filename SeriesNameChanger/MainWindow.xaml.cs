@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.IO;
 using DataFormats = System.Windows.Forms.DataFormats;
 using SeriesNameChanger;
+using System.Text.RegularExpressions;
 
 namespace MovieNameChanger
 {
@@ -34,14 +35,14 @@ namespace MovieNameChanger
 
         private void dropStackPanel_Drop(object sender, System.Windows.DragEventArgs e)
         {
-            if(dropedFilesTextBlock.Text != "")
-            {
-                dropedFilesTextBlock.Text = "";
-            }
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 if(combBoxApi.Text == "Series")
                 {
+                    if (dropedFilesTextBlock.Text != "")
+                    {
+                        dropedFilesTextBlock.Text = "";
+                    }
                     string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                     foreach (string file in files)
                     {
@@ -59,9 +60,58 @@ namespace MovieNameChanger
                 } else if(combBoxApi.Text == "Movie")
                 {
                     string[] movies = (string[])e.Data.GetData(DataFormats.FileDrop);
+                    Console.WriteLine(movies[0]);
                     foreach (string movie in movies)
                     {
-                        dropedFilesTextBlock.Text += $"{movie}\n";
+                        string movieString = movie.Replace(@"\", "/");
+                        string fileType = movie.Split('.').Last();
+                        fileType = $".{fileType}";
+                        dropedFilesTextBlock.Text += $"{movieString}\n";
+                        string fileName = movieString.Split('/').Last();
+                        string filePath = movieString.Replace($"{fileName}", "");
+                        movieString = movieString.Replace($"/{fileName}", "");
+                        movieString = movieString.Split('/').Last();
+                        if (movieString.Any(char.IsDigit))
+                        {
+                            string data = Regex.Match(movieString, @"\d+").Value;
+                            if(data.Length >= 4)
+                            {
+                                int indexOfNumbers = movieString.IndexOf(data);
+                                if (!Char.IsLetter(movieString[indexOfNumbers - 1]))
+                                {
+
+                                    string movieYear = movieString.Split(movieString[indexOfNumbers - 1]).Last();
+
+                                    string movieName = movieString.Replace(movieString[indexOfNumbers - 1], ' ');
+                                    movieName = movieName.Replace(data, "");
+                                    string newFileName = middleClass.PickMovieStringWithYear(movieName, movieYear);
+                                    finalLocationText.Text += $"{filePath}{newFileName}{fileType}\n";
+                                }
+                                else
+                                {
+                                    string movieYear = data;
+                                    string movieName = movieString.Replace(data, "");
+                                    string newFileName = middleClass.PickMovieStringWithYear(movieName, movieYear);
+                                    finalLocationText.Text += $"{filePath}{newFileName}{fileType}\n";
+                                }
+                            }
+                            else if(data.Length < 4)
+                            {
+                                int indexOfNumbers = movieString.IndexOf(data);
+                                if(!Char.IsLetter(movieString[indexOfNumbers - 1]) && movieString[indexOfNumbers -1] != ' ')
+                                {
+                                    movieString = movieString.Replace(movieString[indexOfNumbers - 1], ' ');
+                                    string newFileName = middleClass.PickMovieString($"{movieString}");
+                                    finalLocationText.Text += $"{filePath}{newFileName}{fileType}\n";
+                                }
+                                else
+                                {
+                                    movieString.Replace(data, $" {data}");
+                                    string newFileName = middleClass.PickMovieString($"{movieString}");
+                                    finalLocationText.Text += $"{filePath}{newFileName}{fileType}\n";
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -138,22 +188,22 @@ namespace MovieNameChanger
                     }
                 }
             }
-            else if(combBoxApi.Text == "Movie")
-            {
-                List<string> listOfMovies = middleClass.PickMovieString(seriesNameInput.Text);
-                foreach (string movieName in listOfMovies)
-                {
-                    if(seriesChoice.Items.Count > 4)
-                    {
-                        seriesChoice.Items.Clear();
-                        seriesChoice.Items.Add(movieName);
-                    }
-                    else
-                    {
-                        seriesChoice.Items.Add(movieName);
-                    }
-                }
-            }
+            //else if(combBoxApi.Text == "Movie")
+            //{
+            //    List<string> listOfMovies = middleClass.PickMovieString(seriesNameInput.Text);
+            //    foreach (string movieName in listOfMovies)
+            //    {
+            //        if(seriesChoice.Items.Count > 4)
+            //        {
+            //            seriesChoice.Items.Clear();
+            //            seriesChoice.Items.Add(movieName);
+            //        }
+            //        else
+            //        {
+            //            seriesChoice.Items.Add(movieName);
+            //        }
+            //    }
+            //}
             
         }
 

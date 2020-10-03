@@ -133,22 +133,39 @@ namespace MovieNameChanger.Classes
             return epInfo.episodes.Count;
         }
 
-        public List<string> PickMovieString(string movieName)
+        public string PickMovieString(string movieName)
         {
-            List<string> stringOfMovies = new List<string>();
+            List<string> movieList = new List<string>();
             MovieProperties.Root GetMovie = ApiCall.GetMovieInformation(movieName);
-            for (int i = 0; i < 5; i++)
+            try
             {
-                try
+                movieList.Add(GetMovie.results[0].title);
+                Console.WriteLine(movieList[0]);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return movieList[0];
+        }
+
+        public string PickMovieStringWithYear(string movieName, string movieYear)
+        {
+            List<string> movieList = new List<string>();
+            MovieProperties.Root GetMovie = ApiCall.GetMovieInformation(movieName);
+            try
+            {
+                if(GetMovie.results[0].release_date.Split('-').First() == movieYear)
                 {
-                    stringOfMovies.Add(GetMovie.results[i].title);
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine(e);
+                    movieList.Add(GetMovie.results[0].title);
+                    Console.WriteLine(movieList[0]);
                 }
             }
-            return stringOfMovies;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return movieList[0];
 
         }
 
