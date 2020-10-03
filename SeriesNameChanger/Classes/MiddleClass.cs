@@ -139,7 +139,14 @@ namespace MovieNameChanger.Classes
             MovieProperties.Root GetMovie = ApiCall.GetMovieInformation(movieName);
             for (int i = 0; i < 5; i++)
             {
-                stringOfMovies.Add(GetMovie.results[i].title);
+                try
+                {
+                    stringOfMovies.Add(GetMovie.results[i].title);
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
             return stringOfMovies;
 
